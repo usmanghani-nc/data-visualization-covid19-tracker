@@ -1,65 +1,103 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import { useState, useEffect } from 'react';
+import { AgGridColumn } from 'ag-grid-react';
+import dynamic from 'next/dynamic';
+import axios from 'axios';
+import Table from '../components/table';
+const Chart = dynamic(() => import('../components/charts'), { ssr: false });
+import moment from 'moment';
+
+axios.defaults.baseURL = 'https://covid19.mathdro.id/api/';
 
 export default function Home() {
+  const cn = typeof window !== 'undefined' && localStorage.getItem('cn');
+
+  const [state, setState] = useState({
+    loading: true,
+    location: cn ? cn : 'pk',
+    data: [],
+    countries: [],
+    lastUpdate: '',
+  });
+
+  const getData = async () => {
+    setState({
+      ...state,
+      loading: true,
+    });
+
+    const {
+      data: { countries },
+    } = await axios.get(`/countries`);
+
+    const responce = await axios.get(`https://covid19.mathdro.id/api/`);
+
+    const { data } = await axios.get(`/countries/${state.location}/confirmed`);
+
+    const date = moment(responce.data.lastUpdate).format('YYYY/MM/DD hh:mm:ss a');
+
+    setState({
+      ...state,
+      loading: false,
+      data,
+      lastUpdate: date,
+      countries,
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, [state.location]);
+
+  const handleChange = (e) => {
+    localStorage.setItem('cn', e.target.value);
+    setState({ ...state, location: e.target.value });
+  };
+
+  const selectedData = (id) => {
+    setState({
+      ...state,
+      data: state.data.filter((el) => el.uid === id),
+    });
+  };
+
+  const getAllData = () => {
+    getData();
+  };
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <>
+      {state.loading ? (
+        <h1>Loading....</h1>
+      ) : (
+        <>
+          <h1>Last Update - {state.lastUpdate}</h1>
+          <label htmlFor="Countrys">Choose a Country:</label>
+          <select name="Countrys" onChange={handleChange} value={state.location}>
+            {state.countries.map((countrie) => {
+              return (
+                <option key={countrie.name} value={countrie.iso3}>
+                  {countrie.name}
+                </option>
+              );
+            })}
+          </select>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+          <Table data={state.data} onDataChange={selectedData} getAllData={getAllData}>
+            <AgGridColumn field="provinceState" sortable={true} filter flex={1} />
+            <AgGridColumn field="confirmed" sortable={true} filter flex={1} />
+            <AgGridColumn field="active" sortable={true} filter flex={1} />
+            <AgGridColumn field="deaths" sortable={true} filter flex={1} />
+            <AgGridColumn field="recovered" sortable={true} filter flex={1} />
+          </Table>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+          <div style={{ marginTop: '20px' }}>
+            <h2>Province / Capital territory</h2>
+            <Chart data={state.data} />
+          </div>
+        </>
+      )}
+    </>
+  );
 }
