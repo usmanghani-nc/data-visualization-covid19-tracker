@@ -5,10 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "push": "git add . && git commit -m",
+    "postpush": "git push --all"
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.17",
+    "@amcharts/amcharts4-geodata": "^4.1.19",
     "ag-grid-community": "^25.1.0",
     "ag-grid-react": "^25.1.0",
     "axios": "^0.21.1",
