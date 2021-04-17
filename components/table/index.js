@@ -21,10 +21,18 @@ export default function Home({ children, data, onDataChange, getAllData }) {
   };
 
   return (
-    <>
-      <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
-        <button onClick={onButtonClick}>Get selected rows</button>
-        <button onClick={getAllData}>Get All Data</button>
+    <div className="my-5">
+      <div className="ag-theme-alpine" style={{ height: '50vh', width: '100%' }}>
+        <button
+          className="py-2 px-4 rounded-md shadow-md text-white bg-blue-400 hover:bg-blue-500 mr-5 my-5"
+          onClick={onButtonClick}>
+          Get selected rows
+        </button>
+        <button
+          className="py-2 px-4 rounded-md shadow-md text-white bg-blue-400 hover:bg-blue-500 my-5"
+          onClick={getAllData}>
+          Get All Data
+        </button>
         <AgGridReact
           rowStyle={{ lineHeight: 2 }}
           onGridReady={onGridReady}
@@ -36,6 +44,6 @@ export default function Home({ children, data, onDataChange, getAllData }) {
           {children}
         </AgGridReact>
       </div>
-    </>
+    </div>
   );
 }

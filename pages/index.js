@@ -7,6 +7,7 @@ import axios from 'axios';
 import Table from '../components/table';
 const Chart = dynamic(() => import('../components/charts'), { ssr: false });
 import moment from 'moment';
+import { Container } from '../ui/container';
 
 axios.defaults.baseURL = 'https://covid19.mathdro.id/api/';
 
@@ -67,22 +68,28 @@ export default function Home() {
   };
 
   return (
-    <>
+    <Container>
       {state.loading ? (
         <h1>Loading....</h1>
       ) : (
         <>
-          <h1>Last Update - {state.lastUpdate}</h1>
-          <label htmlFor="Countrys">Choose a Country:</label>
-          <select name="Countrys" onChange={handleChange} value={state.location}>
-            {state.countries.map((countrie) => {
-              return (
-                <option key={countrie.name} value={countrie.iso3}>
-                  {countrie.name}
-                </option>
-              );
-            })}
-          </select>
+          <h1 className="my-2">Last Update - {state.lastUpdate}</h1>
+
+          <div className="my-2">
+            <label className="mr-2" htmlFor="Countrys">
+              Choose a Country:
+            </label>
+
+            <select name="Countrys" onChange={handleChange} value={state.location}>
+              {state.countries.map((countrie) => {
+                return (
+                  <option key={countrie.name} value={countrie.iso3}>
+                    {countrie.name}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
 
           <Table data={state.data} onDataChange={selectedData} getAllData={getAllData}>
             <AgGridColumn field="provinceState" sortable={true} filter flex={1} />
@@ -92,12 +99,12 @@ export default function Home() {
             <AgGridColumn field="recovered" sortable={true} filter flex={1} />
           </Table>
 
-          <div style={{ marginTop: '20px' }}>
+          <div className="my-5" style={{ marginTop: '7em' }}>
             <h2>Province / Capital territory</h2>
             <Chart data={state.data} />
           </div>
         </>
       )}
-    </>
+    </Container>
   );
 }
