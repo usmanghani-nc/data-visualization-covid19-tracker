@@ -5,7 +5,7 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 
 am4core.useTheme(am4themes_animated);
 
-export default function index({ data }) {
+export default function Chart({ data }) {
   const chartRef = useRef(null);
 
   const sliceData = data.slice(0, 20).map((el) => {
@@ -26,14 +26,14 @@ export default function index({ data }) {
     const categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
     categoryAxis.dataFields.category = 'country';
     categoryAxis.fontSize = 15;
-    // categoryAxis.renderer.minGridDistance = 60;
+    categoryAxis.renderer.minGridDistance = 60;
     categoryAxis.renderer.grid.template.location = 0;
     // categoryAxis.tooltip.disabled = true;
 
     const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
     chart.colors.list = [
-      am4core.color('#f0ad05'),
+      am4core.color('#72b1ff'),
       am4core.color('#57b6fa'),
       am4core.color('#db3030'),
     ];
@@ -49,6 +49,7 @@ export default function index({ data }) {
       series.columns.template.column.cornerRadiusTopLeft = 10;
       series.tooltip.pointerOrientation = 'vertical';
       series.columns.template.column.fillOpacity = 0.8;
+
       // categoryAxis.sortBySeries = series;
       // series.columns.template.adapter.add('fill', (fill, target) => {
       //   return chart.colors.getIndex(target.dataItem.index);

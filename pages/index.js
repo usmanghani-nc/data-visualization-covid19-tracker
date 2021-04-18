@@ -8,7 +8,7 @@ import Table from '../components/table';
 const Chart = dynamic(() => import('../components/charts'), { ssr: false });
 import moment from 'moment';
 import { Container } from '../ui/container';
-
+import Link from 'next/link';
 axios.defaults.baseURL = 'https://covid19.mathdro.id/api/';
 
 export default function Home() {
@@ -73,22 +73,34 @@ export default function Home() {
         <h1>Loading....</h1>
       ) : (
         <>
-          <h1 className="my-2">Last Update - {state.lastUpdate}</h1>
+          <div className="my-2 flex justify-between">
+            <h2 className="my-2">Last Update - {state.lastUpdate}</h2>
 
-          <div className="my-2">
-            <label className="mr-2" htmlFor="Countrys">
-              Choose a Country:
-            </label>
+            <div>
+              <label className="mr-2" htmlFor="Countrys">
+                Choose a Country:
+              </label>
 
-            <select name="Countrys" onChange={handleChange} value={state.location}>
-              {state.countries.map((countrie) => {
-                return (
-                  <option key={countrie.name} value={countrie.iso3}>
-                    {countrie.name}
-                  </option>
-                );
-              })}
-            </select>
+              <select
+                className="border border-blue-400 rounded p-1"
+                name="Countrys"
+                onChange={handleChange}
+                value={state.location}>
+                {state.countries.map((countrie) => {
+                  return (
+                    <option key={countrie.name} value={countrie.iso3}>
+                      {countrie.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
+            <div className="">
+              <Link href="/map">
+                <a className="text-blue-400 hover:text-blue-500">World map</a>
+              </Link>
+            </div>
           </div>
 
           <Table data={state.data} onDataChange={selectedData} getAllData={getAllData}>
