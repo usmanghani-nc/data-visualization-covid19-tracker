@@ -8,10 +8,7 @@ export default function Table({ children, data, onDataChange, getAllData }) {
   const [gridColumnApi, setGridColumnApi] = useState(null);
 
   const onButtonClick = (e) => {
-    const selectedNodes = gridApi.getSelectedNodes();
-
-    const [data] = selectedNodes.map((node) => node.data);
-
+    const [data] = gridApi.getSelectedRows();
     onDataChange(data.uid);
   };
 
@@ -24,14 +21,9 @@ export default function Table({ children, data, onDataChange, getAllData }) {
     <div className="my-5">
       <div className="ag-theme-alpine" style={{ height: '50vh', width: '100%' }}>
         <button
-          className="py-2 px-4 rounded-md shadow-md text-white bg-blue-400 hover:bg-blue-500 mr-5 my-5"
-          onClick={onButtonClick}>
-          Get selected rows
-        </button>
-        <button
           className="py-2 px-4 rounded-md shadow-md text-white bg-blue-400 hover:bg-blue-500 my-5"
           onClick={getAllData}>
-          Get All Data
+          Clear Filter
         </button>
         <AgGridReact
           rowStyle={{ lineHeight: 2 }}
@@ -40,6 +32,7 @@ export default function Table({ children, data, onDataChange, getAllData }) {
           rowData={data}
           pagination={true}
           paginationPageSize={20}
+          onSelectionChanged={onButtonClick}
           paginationAutoPageSize={true}>
           {children}
         </AgGridReact>

@@ -18,41 +18,45 @@ export default function Map({ data }) {
 
     chart.projection = new am4maps.projections.Miller();
 
-    const polygonSeries = new am4maps.MapPolygonSeries();
+    function makeSeries() {
+      const polygonSeries = new am4maps.MapPolygonSeries();
 
-    chart.series.push(polygonSeries);
+      chart.series.push(polygonSeries);
 
-    polygonSeries.useGeodata = true;
+      polygonSeries.useGeodata = true;
 
-    polygonSeries.data = state;
+      polygonSeries.data = state;
 
-    polygonSeries.data.map((el) => {
-      const newDAta = [];
+      polygonSeries.data.map((el) => {
+        const newDAta = [];
 
-      if (el.deaths > 1000) {
-        el.fill = am4core.color('red');
+        if (el.deaths > 1000) {
+          el.fill = am4core.color('red');
 
-        newDAta.push(el);
-      } else if (el.deaths > 500 && el.deaths < 1000) {
-        el.fill = am4core.color('coral');
+          newDAta.push(el);
+        } else if (el.deaths > 500 && el.deaths < 1000) {
+          el.fill = am4core.color('coral');
 
-        newDAta.push(el);
-      } else {
-        el.fill = am4core.color('green');
-        newDAta.push(el);
-      }
+          newDAta.push(el);
+        } else {
+          el.fill = am4core.color('green');
+          newDAta.push(el);
+        }
 
-      return newDAta;
-    });
+        return newDAta;
+      });
 
-    const template = polygonSeries.mapPolygons.template;
-    template.fill = am4core.color('#3083ff');
-    template.tooltipText =
-      '{name} Deaths - {deaths}, Confirmed - {confirmed}, Recovered - {recovered}, Last Update - {lastUpdate}';
-    template.propertyFields.fill = 'fill';
+      const template = polygonSeries.mapPolygons.template;
+      template.fill = am4core.color('#3083ff');
+      template.tooltipText =
+        '{name} Deaths - {deaths}, Confirmed - {confirmed}, Recovered - {recovered}, Last Update - {lastUpdate}';
+      template.propertyFields.fill = 'fill';
 
-    const hover = template.states.create('hover');
-    hover.properties.fill = am4core.color('#b8d3ff');
+      const hover = template.states.create('hover');
+      hover.properties.fill = am4core.color('#b8d3ff');
+    }
+
+    makeSeries();
 
     return () => chart.dispose();
   }, [state]);

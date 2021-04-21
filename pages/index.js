@@ -16,10 +16,11 @@ export default function Home() {
 
   const [state, setState] = useState({
     loading: true,
-    location: cn ? cn : 'pk',
+    location: cn ? cn : 'USA',
     data: [],
     countries: [],
     lastUpdate: '',
+    chartFilter: null,
   });
 
   const getData = async () => {
@@ -42,6 +43,7 @@ export default function Home() {
       ...state,
       loading: false,
       data,
+      chartFilter: data,
       lastUpdate: date,
       countries,
     });
@@ -59,12 +61,15 @@ export default function Home() {
   const selectedData = (id) => {
     setState({
       ...state,
-      data: state.data.filter((el) => el.uid === id),
+      chartFilter: state.data.filter((el) => el.uid === id),
     });
   };
 
   const getAllData = () => {
-    getData();
+    setState({
+      ...state,
+      chartFilter: state.data,
+    });
   };
 
   return (
@@ -113,7 +118,7 @@ export default function Home() {
 
           <div className="my-5" style={{ marginTop: '7em' }}>
             <h2>Province / Capital territory</h2>
-            <Chart data={state.data} />
+            <Chart data={state.chartFilter} />
           </div>
         </>
       )}
