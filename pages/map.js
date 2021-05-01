@@ -13,7 +13,12 @@ export default function Map({}) {
     countries: '',
   });
 
-  const getData = async () => {
+  const getPoulationData = async () => {
+    const { data } = await axios.get('https://restcountries.eu/rest/v2/all');
+    return data;
+  };
+
+  const getData = async (populations) => {
     setState({
       ...state,
       loading: true,
@@ -31,7 +36,7 @@ export default function Map({}) {
 
         return data;
       } catch (err) {
-        console.log(err, 'ERROR');
+        console.log(err.message, 'ERROR');
       }
     };
 
@@ -39,6 +44,12 @@ export default function Map({}) {
       return Promise.all(
         countries.map(async (con) => {
           const country = await getCountry(con.iso2);
+          const [populationData] = populations.filter((pop) => pop.alpha2Code === con.iso2);
+
+          const deathPercent = (
+            (country?.deaths?.value / populationData?.population) *
+            100
+          ).toFixed(3);
 
           return {
             id: con.iso2,
@@ -46,6 +57,8 @@ export default function Map({}) {
             confirmed: country?.confirmed?.value,
             deaths: country?.deaths?.value,
             recovered: country?.recovered?.value,
+            population: populationData?.population,
+            deathPercent: parseInt(deathPercent),
             lastUpdate: moment(country?.lastUpdate).format('YYYY/MM/DD hh:mm:ss a'),
           };
         }),
@@ -61,8 +74,8 @@ export default function Map({}) {
   };
 
   useEffect(() => {
-    getData();
+    getPoulationData().then((pop) => getData(pop));
   }, []);
 
-  return <ChartMap data={state.data} />;
+  return <>{!state.loading ? <ChartMap data={state.data} /> : <h2>Loading...</h2>}</>;
 }

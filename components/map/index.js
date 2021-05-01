@@ -30,26 +30,30 @@ export default function Map({ data }) {
       polygonSeries.data.map((el) => {
         const newDAta = [];
 
-        if (el.deaths > 1000) {
-          el.fill = am4core.color('red');
+        console.log(el);
+
+        if (el.deaths > 2000) {
+          el.fill = am4core.color('#3e71a3');
 
           newDAta.push(el);
-        } else if (el.deaths > 500 && el.deaths < 1000) {
-          el.fill = am4core.color('coral');
+        } else if (el.deaths > 1000 && el.deaths < 1200) {
+          el.fill = am4core.color('#6e92b5');
 
           newDAta.push(el);
         } else {
-          el.fill = am4core.color('green');
+          el.fill = am4core.color('#b8d7f5');
           newDAta.push(el);
         }
 
         return newDAta;
       });
 
+      polygonSeries.exclude = ['AQ'];
+
       const template = polygonSeries.mapPolygons.template;
-      template.fill = am4core.color('#3083ff');
+      template.fill = am4core.color('grey');
       template.tooltipText =
-        '{name} Deaths - {deaths}, Confirmed - {confirmed}, Recovered - {recovered}, Last Update - {lastUpdate}';
+        '{name} Deaths - {deaths}, Confirmed - {confirmed}, Recovered - {recovered}, Last Update - {lastUpdate}, Percentage - {deathPercent}%';
       template.propertyFields.fill = 'fill';
 
       const hover = template.states.create('hover');
