@@ -19,6 +19,7 @@ export default function Home() {
     location: cn ? cn : 'USA',
     data: [],
     countries: [],
+    population: [],
     lastUpdate: '',
     chartFilter: null,
   });
@@ -35,9 +36,14 @@ export default function Home() {
 
     const responce = await axios.get(`https://covid19.mathdro.id/api/`);
 
+    const { data: population } = await axios.get('https://restcountries.eu/rest/v2/all');
+
     const { data } = await axios.get(`/countries/${state.location}/confirmed`);
 
     const date = moment(responce.data.lastUpdate).format('YYYY/MM/DD hh:mm:ss a');
+
+    console.log(responce, 'responce');
+    console.log(population, 'population');
 
     setState({
       ...state,
@@ -46,6 +52,7 @@ export default function Home() {
       chartFilter: data,
       lastUpdate: date,
       countries,
+      population,
     });
   };
 
