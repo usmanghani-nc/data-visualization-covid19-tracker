@@ -73,7 +73,7 @@ export default function Home() {
   };
 
   return (
-    <Container>
+    <div className="max-w-screen-xl mx-auto">
       {state.loading ? (
         <h1>Loading....</h1>
       ) : (
@@ -122,6 +122,6 @@ export default function Home() {
           </div>
         </>
       )}
-    </Container>
+    </div>
   );
 }
