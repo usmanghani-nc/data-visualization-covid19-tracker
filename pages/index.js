@@ -7,7 +7,7 @@ import axios from 'axios';
 import Table from '../components/table';
 const Chart = dynamic(() => import('../components/charts'), { ssr: false });
 import moment from 'moment';
-import { Container } from '../ui/container';
+import Spinner from './../ui/spinner';
 import Link from 'next/link';
 axios.defaults.baseURL = 'https://covid19.mathdro.id/api/';
 
@@ -75,7 +75,7 @@ export default function Home() {
   return (
     <div className="max-w-screen-xl mx-auto">
       {state.loading ? (
-        <h1>Loading....</h1>
+        <Spinner />
       ) : (
         <>
           <div className="my-2 flex justify-between">
