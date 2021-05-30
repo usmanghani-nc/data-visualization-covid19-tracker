@@ -5,10 +5,12 @@ import { AgGridColumn } from 'ag-grid-react';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 import Table from '../components/table';
-const Chart = dynamic(() => import('../components/charts'), { ssr: false });
 import moment from 'moment';
 import Spinner from './../ui/spinner';
 import Link from 'next/link';
+const BarChart = dynamic(() => import('../components/charts/bar-chart'), { ssr: false });
+const Chart = dynamic(() => import('../components/charts'), { ssr: false });
+
 axios.defaults.baseURL = 'https://covid19.mathdro.id/api/';
 
 export default function Home() {
@@ -72,6 +74,8 @@ export default function Home() {
     });
   };
 
+  console.log(state.chartFilter, '??');
+
   return (
     <div className="max-w-screen-xl mx-auto">
       {state.loading ? (
@@ -117,8 +121,10 @@ export default function Home() {
           </Table>
 
           <div className="my-5" style={{ marginTop: '7em' }}>
-            <h2>Province / Capital territory</h2>
-            <Chart data={state.chartFilter} />
+            {/* <h2>Province / Capital territory</h2> */}
+            {/* <Chart data={state.chartFilter} /> */}
+
+            <BarChart data={state.chartFilter} title="Province / Capital territory" />
           </div>
         </>
       )}
