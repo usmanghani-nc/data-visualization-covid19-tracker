@@ -9,19 +9,22 @@ import moment from 'moment';
 import Spinner from './../ui/spinner';
 import Link from 'next/link';
 const BarChart = dynamic(() => import('../components/charts/bar-chart'), { ssr: false });
-const Chart = dynamic(() => import('../components/charts'), { ssr: false });
+import { useFetch } from '../hooks/useFetch';
 
 axios.defaults.baseURL = 'https://covid19.mathdro.id/api/';
 
 export default function Home() {
   const cn = typeof window !== 'undefined' && localStorage.getItem('cn');
 
+  const [covidData] = useFetch(`https://covid19.mathdro.id/api/`);
+
+  const date = moment(covidData.data?.lastUpdate).format('YYYY/MM/DD hh:mm:ss a');
+
   const [state, setState] = useState({
     loading: true,
     location: cn ? cn : 'USA',
     data: [],
     countries: [],
-    lastUpdate: '',
     chartFilter: null,
   });
 
@@ -35,18 +38,13 @@ export default function Home() {
       data: { countries },
     } = await axios.get(`/countries`);
 
-    const responce = await axios.get(`https://covid19.mathdro.id/api/`);
-
     const { data } = await axios.get(`/countries/${state.location}/confirmed`);
-
-    const date = moment(responce.data.lastUpdate).format('YYYY/MM/DD hh:mm:ss a');
 
     setState({
       ...state,
       loading: false,
       data,
       chartFilter: data,
-      lastUpdate: date,
       countries,
     });
   };
@@ -83,7 +81,7 @@ export default function Home() {
       ) : (
         <>
           <div className="my-2 flex justify-between">
-            <h2 className="my-2">Last Update - {state.lastUpdate}</h2>
+            <h2 className="my-2">Last Update - {date}</h2>
 
             <div>
               <label className="mr-2" htmlFor="Countrys">
