@@ -7,6 +7,7 @@ export function useFetch({ url }) {
   useEffect(() => {
     const fetchData = async () => {
       const responce = await axios.get(url);
+
       setData(responce.data);
     };
 
