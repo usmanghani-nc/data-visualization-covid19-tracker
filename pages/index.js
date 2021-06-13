@@ -9,6 +9,7 @@ import moment from 'moment';
 import Spinner from './../ui/spinner';
 import Header from '../components/header';
 const BarChart = dynamic(() => import('../components/charts/bar-chart'), { ssr: false });
+
 import { useFetch } from '../hooks/useFetch';
 
 axios.defaults.baseURL = 'https://covid19.mathdro.id/api/';
