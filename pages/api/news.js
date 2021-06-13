@@ -43,9 +43,6 @@ const loadingScript = async () => {
 
 export default async function handler(req, res) {
   try {
-    // Run the middleware
-    await runMiddleware(req, res, cors);
-
     const data = await loadingScript();
 
     res.json(data);
