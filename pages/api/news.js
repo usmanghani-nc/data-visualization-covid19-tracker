@@ -1,5 +1,23 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+import Cors from 'cors';
+
+// Initializing the cors middleware
+const cors = Cors({
+  methods: ['GET', 'HEAD'],
+});
+
+const runMiddleware = (req, res, fn) => {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+
+      return resolve(result);
+    });
+  });
+};
 
 const fetchData = async (fetchHtml) => {
   const webpage = await axios.get(fetchHtml);
@@ -25,6 +43,9 @@ const loadingScript = async () => {
 
 export default async function handler(req, res) {
   try {
+    // Run the middleware
+    await runMiddleware(req, res, cors);
+
     const data = await loadingScript();
 
     res.json(data);
