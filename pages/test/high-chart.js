@@ -1,8 +1,9 @@
-import BarChart from '../../components/charts/bar-chart';
+// import BarChart from '../../components/charts/bar-chart';
 export default function sort({}) {
   return (
     <div>
-      <BarChart />
+      {/* <BarChart /> */}
+      test high chart
     </div>
   );
 }

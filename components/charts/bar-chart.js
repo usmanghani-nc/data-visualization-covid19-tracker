@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import Highcharts from 'highcharts';
-window.Highcharts = Highcharts;
 import HighchartsReact from 'highcharts-react-official';
 
 import HighchartsExporting from 'highcharts/modules/exporting';
@@ -45,6 +44,12 @@ export default function BarChart({ data, title }) {
       },
     ],
   };
+
+  useEffect(() => {
+    if (window) {
+      window.Highcharts = Highcharts;
+    }
+  }, []);
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 }

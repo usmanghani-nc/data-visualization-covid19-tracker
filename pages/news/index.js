@@ -3,8 +3,12 @@ import { useEffect, useState } from 'react';
 import Spinner from '../../ui/spinner';
 import Header from '../../components/header';
 
+const domain = 'https://data-visualization-covid19-tracker.vercel.app/';
+
+const local = `http://localhost:3000/api/news`;
+
 export default function Home() {
-  const [covidData] = useFetch({ url: `http://localhost:3000/api/news` });
+  const [covidData] = useFetch({ url: domain });
 
   const [loading, setLoagin] = useState(true);
 
