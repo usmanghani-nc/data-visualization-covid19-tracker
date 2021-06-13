@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import Spinner from '../../ui/spinner';
 import Header from '../../components/header';
 
-const domain = 'https://data-visualization-covid19-tracker.vercel.app/api/news';
+const domain =
+  'https://data-visualization-covid19-tracker-qd7lomp62-usmanghanidev.vercel.app/api/news';
 
 // const local = `http://localhost:3000/api/news`;
 
