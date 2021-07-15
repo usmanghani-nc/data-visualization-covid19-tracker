@@ -1,23 +1,5 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-import Cors from 'cors';
-
-// Initializing the cors middleware
-const cors = Cors({
-  methods: ['GET', 'HEAD'],
-});
-
-const runMiddleware = (req, res, fn) => {
-  return new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-
-      return resolve(result);
-    });
-  });
-};
 
 const fetchData = async (fetchHtml) => {
   const webpage = await axios.get(fetchHtml);

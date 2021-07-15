@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import moment from 'moment';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
+import Spinner from './../ui/spinner';
+import Header from '../components/header';
+
 const ChartMap = dynamic(() => import('../components/map'), { ssr: false });
 
 axios.defaults.baseURL = 'https://covid19.mathdro.id/api/';
@@ -77,5 +80,16 @@ export default function Map({}) {
     getPoulationData().then((pop) => getData(pop));
   }, []);
 
-  return <>{!state.loading ? <ChartMap data={state.data} /> : <h2>Loading...</h2>}</>;
+  return (
+    <section className="bg-gray-800 ">
+      <Header />
+      <div className="container mx-auto px-4 h-full">
+        <div className="flex items-center h-full">
+          <div className="p-12 w-full">
+            {!state.loading ? <ChartMap data={state.data} /> : <Spinner />}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

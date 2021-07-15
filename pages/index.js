@@ -8,7 +8,8 @@ import Table from '../components/table';
 import moment from 'moment';
 import Spinner from './../ui/spinner';
 import Header from '../components/header';
-const BarChart = dynamic(() => import('../components/charts/bar-chart'), { ssr: false });
+
+const Barchart = dynamic(() => import('../components/charts/bar-chart'), { ssr: false });
 
 import { useFetch } from '../hooks/useFetch';
 
@@ -79,7 +80,7 @@ export default function Home() {
         <Spinner />
       ) : (
         <>
-          <Header date={date} />
+          <Header />
 
           <div className="container mx-auto px-4">
             <div className="flex justify-between">
@@ -114,10 +115,7 @@ export default function Home() {
             </Table>
 
             <div className="my-5" style={{ marginTop: '7em' }}>
-              {/* <h2>Province / Capital territory</h2> */}
-              {/* <Chart data={state.chartFilter} /> */}
-
-              <BarChart data={state.chartFilter} title="Province / Capital territory" />
+              <Barchart data={state.chartFilter} title="Province / Capital territory" />
             </div>
           </div>
         </>

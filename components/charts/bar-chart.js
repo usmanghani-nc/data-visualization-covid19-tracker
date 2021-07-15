@@ -1,48 +1,88 @@
-import Highcharts from 'highcharts/highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import HighchartsExporting from 'highcharts/modules/exporting';
-window.Highcharts = Highcharts;
-
-if (typeof Highcharts === 'object') {
-  HighchartsExporting(Highcharts);
-}
+import { useState, useEffect } from 'react';
+import Chart from 'react-apexcharts';
 
 export default function BarChart({ data, title }) {
-  const options = {
-    chart: {
-      type: 'column',
-    },
-    title: {
-      text: title ? title : '',
-    },
-    xAxis: {
-      categories: data.map((el) => el.provinceState),
-    },
-    yAxis: {
-      title: {
-        text: '',
+  if (!data || data.length < 1) {
+    return <></>;
+  }
+
+  const [state, setState] = useState({
+    options: {
+      chart: {
+        type: 'bar',
+        stacked: true,
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0,
+            },
+          },
+        },
+      ],
+      data: [],
+      fill: {
+        opacity: 1,
+      },
+      legend: {
+        position: 'right',
+        offsetX: 0,
+        offsetY: 50,
       },
     },
+
     series: [
       {
-        name: 'Confirmed',
-        data: data.map((el) => el.confirmed),
-      },
-      {
-        name: 'Recovered',
-        data: data.map((el) => el.recovered),
+        name: 'Deaths',
+        data: [],
       },
       {
         name: 'Active',
-        data: data.map((el) => el.active),
+        data: [],
       },
-
       {
-        name: 'Deaths',
-        data: data.map((el) => el.deaths),
+        name: 'Confirmed',
+        data: [],
       },
     ],
-  };
+  });
 
-  return <HighchartsReact highcharts={Highcharts} options={options} />;
+  useEffect(() => {
+    const factorData = data.length > 10 ? data.slice(0, 10) : data;
+
+    setState({
+      ...state,
+      options: {
+        ...state.options,
+        xaxis: {
+          categories: factorData.map((el) => el.provinceState),
+        },
+      },
+
+      series: [
+        {
+          name: 'Active',
+          data: factorData.map((el) => el.active),
+        },
+        {
+          name: 'Confirmed',
+          data: factorData.map((el) => el.confirmed),
+        },
+        {
+          name: 'Deaths',
+          data: factorData.map((el) => el.deaths),
+        },
+      ],
+    });
+  }, [data]);
+
+  return (
+    <div>
+      <Chart options={state.options} series={state.series} type="bar" height="500" />
+    </div>
+  );
 }
